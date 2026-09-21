@@ -185,16 +185,15 @@
                 </span>
             </button>
 
-            <!-- Apple of Fortune Game -->
-            <button type="button" data-game="APPLE"
+            <!-- Crash Game -->
+            <button type="button" data-game="CRASH"
                 class="game-btn bg-[#0a0a0c] border border-zinc-800 rounded-2xl p-3 flex flex-col items-center justify-center gap-3">
-                <div class="w-16 h-16 rounded-xl overflow-hidden bg-gradient-to-br from-green-900 to-black border border-green-500/30 flex items-center justify-center game-icon-container relative shadow-inner">
-                    <span class="text-3xl relative z-10 drop-shadow-lg">🍏</span>
-                    <div class="absolute inset-0 bg-[radial-gradient(circle,rgba(74,222,128,0.1)_0%,rgba(0,0,0,0)_70%)] z-0"></div>
+                <div class="w-16 h-16 rounded-xl overflow-hidden bg-gradient-to-br from-purple-900 to-black border border-purple-500/30 flex items-center justify-center game-icon-container relative shadow-inner">
+                    <span class="text-3xl relative z-10 drop-shadow-lg">📈</span>
+                    <div class="absolute inset-0 bg-[radial-gradient(circle,rgba(168,85,247,0.1)_0%,rgba(0,0,0,0)_70%)] z-0"></div>
                 </div>
-                <span class="font-black text-[10px] text-center leading-tight text-white tracking-widest"
-                    style="font-family: sans-serif;">
-                    APPLE OF<br>FORTUNE
+                <span class="font-black text-xs text-white tracking-wider" style="font-family: sans-serif;">
+                    CRASH
                 </span>
             </button>
 
@@ -223,6 +222,34 @@
                 ابدأ الربط بالسيرفر
             </span>
         </button>
+    </div>
+
+    <!-- MODAL ERROR MINES (Balance Warning) -->
+    <div id="modal-mines-error"
+        class="fixed inset-0 bg-black/95 backdrop-blur-md z-[60] hidden flex-col items-center justify-center p-4 animate-fade-in">
+
+        <div class="bg-zinc-950 border border-zinc-800 rounded-3xl p-8 w-full max-w-sm shadow-2xl relative flex flex-col items-center text-center">
+
+            <div class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mb-5">
+                <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 1.732 3.34 1.732z"></path>
+                </svg>
+            </div>
+
+            <h3 class="text-xl font-black text-white mb-2">
+                الرصيد غير كافي!
+            </h3>
+
+            <p class="text-sm text-zinc-400 mb-6 leading-relaxed">
+                عذراً، لاستخدام توقعات لعبة MINES يجب عليك شحن حسابك بمبلغ <span class="text-yellow-400 font-bold">5,000 IQD</span> إضافية على الأقل لتفعيل السيرفر.
+            </p>
+
+            <button type="button" id="btn-close-mines-error"
+                class="bg-blue-600 hover:bg-blue-500 text-white py-3 px-6 rounded-xl font-bold text-base transition-colors w-full shadow-[0_0_15px_rgba(37,99,235,0.4)]">
+                حسناً، فهمت
+            </button>
+        </div>
     </div>
 
     <!-- LIVE WINS FEED -->
@@ -288,7 +315,7 @@
             });
         });
 
-        // Get Signal Button -> Generates Random Coefficient up to 5x
+        // Get Signal Button Logic
         document.getElementById('btn-get-signal').addEventListener('click', () => {
             const btnSignal = document.getElementById('btn-get-signal');
             const textBtn = document.getElementById('text-btn-signal');
@@ -310,20 +337,32 @@
                 textBtn.textContent = 'توقع مرة اخرى';
                 iconSpin.classList.add('hidden');
 
-                // Generate random multiplier from 1.05 to 5.00
-                const randomCoeff = (Math.random() * (5.00 - 1.05) + 1.05).toFixed(2);
+                if (selectedGame === 'MINES') {
+                    // Show Deposit Error for Mines
+                    document.getElementById('modal-mines-error').classList.remove('hidden');
+                    document.getElementById('modal-mines-error').classList.add('flex');
+                } else {
+                    // Generate random multiplier from 1.05 to 5.00 for AVIATOR and CRASH
+                    const randomCoeff = (Math.random() * (5.00 - 1.05) + 1.05).toFixed(2);
 
-                coeffValue.textContent = `x${randomCoeff}`;
-                gameName.textContent = selectedGame;
-                coeffBox.classList.remove('hidden');
+                    coeffValue.textContent = `x${randomCoeff}`;
+                    gameName.textContent = selectedGame;
+                    coeffBox.classList.remove('hidden');
+                }
             }, 1500);
+        });
+
+        // Close Mines Error Modal
+        document.getElementById('btn-close-mines-error').addEventListener('click', () => {
+            document.getElementById('modal-mines-error').classList.add('hidden');
+            document.getElementById('modal-mines-error').classList.remove('flex');
         });
 
         // LIVE WINS GENERATOR
         const fakeGames = [
             {name: 'MINES', icon: '💣'},
             {name: 'AVIATOR', icon: '✈️'},
-            {name: 'APPLE', icon: '🍏'}
+            {name: 'CRASH', icon: '📈'}
         ];
 
         function generateRandomId() {
