@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ar-IQ" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hassan Hack Predictor - EXPLOIT HUB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes pulse-red { 0%, 100% { box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); } 50% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.8); } }
+        .error-glow { animation: pulse-red 2s infinite; }
+        .game-btn { position: relative; overflow: hidden; transition: all 0.3s ease; }
+        .game-btn::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+            opacity: 0; transition: opacity 0.3s ease;
+        }
+        .game-btn:hover::before { opacity: 1; }
+        .game-btn.active { border-color: #3b82f6; box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); transform: translateY(-3px); background-color: #18181b; }
+        .game-icon-container { transition: transform 0.3s ease; }
+        .game-btn:hover .game-icon-container { transform: scale(1.05); }
+        .game-btn.active .game-icon-container { transform: scale(1.1); }
+
+        .loading-bar { position: relative; overflow: hidden; }
+        .loading-bar::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.8), transparent);
+            animation: loading 1.5s infinite ease-in-out;
+        }
+        @keyframes loading { 100% { left: 200%; } }
+
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .animate-slide-up { animation: slideUpFade 0.4s ease-out forwards; }
+        @keyframes fadeOutDown {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(20px); }
+        }
+        .animate-fade-out { animation: fadeOutDown 0.4s ease-out forwards; }
+    </style>
+</head>
+
+<body class="bg-[#050505] text-zinc-300 min-h-screen flex flex-col items-center p-4 overflow-x-hidden">
+
+    <!-- VIEW 1: LANDING PAGE -->
+    <div id="view-landing" class="flex-1 w-full max-w-xl flex flex-col items-center justify-center animate-fade-in">
+        <div class="text-center mb-10">
+            <svg class="w-28 h-28 mx-auto mb-4 fill-white drop-shadow-[0_0_15px_rgba(59,130,246,0.6)]" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path d="M40 20 L50 35 L40 50 L55 50 L65 30 L55 20 Z" />
+                <path d="M60 40 L65 50 L55 60 L65 60 L75 45 L65 35 Z" />
+                <path d="M70 55 L75 65 L65 75 L75 75 L85 60 L75 50 Z" />
+            </svg>
+            <h1 class="text-4xl font-black text-white tracking-tighter mb-2" style="font-family: sans-serif;">
+                Hassan Hack <span class="text-blue-500">Predictor</span>
+            </h1>
+            <p class="text-sm text-zinc-500 uppercase tracking-widest font-bold">
+                منظومة التوقعات والتجميع v2.4
+            </p>
+        </div>
+
+        <div class="bg-zinc-900/80 backdrop-blur-md border border-zinc-800 rounded-2xl p-8 shadow-2xl w-full text-center relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600"></div>
+
+            <h2 class="text-2xl font-black text-white mb-4 tracking-wide">
+                توقعات الخوارزمية المضبوطة
+            </h2>
+
+            <p class="text-sm text-zinc-400 mb-6 leading-relaxed">
+                منظومة Hassan Hack Predictor تقرأ سيرفرات الـ RNG مباشرة وتنطيك توقعات مضمونة بنسبة توصل لـ
+                <span class="text-green-400 font-bold drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]">
+                    96.4%
+                </span>.
+            </p>
+
+            <!-- Password Input -->
+            <div class="mb-6 text-right">
+                <label class="block text-xs font-bold text-zinc-400 mb-2">أدخل كلمة السر للدخول:</label>
+                <input type="password" id="input-password" placeholder="••••" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 px-4 text-center text-white font-bold text-lg focus:outline-none focus:border-blue-500 transition-colors" />
+                <p id="password-error" class="text-red-500 text-xs mt-2 hidden text-center font-bold">كلمة السر غير صحيحة!</p>
+            </div>
+
+            <button type="button" id="btn-start"
+                class="w-full bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-xl font-bold text-lg tracking-wider transition-all shadow-[0_0_20px_rgba(37,99,235,0.4)] flex items-center justify-center gap-3 group">
+                شغّل المنظومة وابدأ هسه
+                <svg class="w-5 h-5 group-hover:-translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- VIEW 2: LOADING TRANSITION -->
+    <div id="view-loader" class="hidden flex-1 w-full max-w-xl flex-col items-center justify-center animate-fade-in">
+        <div class="text-center">
+            <div class="w-20 h-20 bg-blue-900/20 rounded-full flex items-center justify-center mx-auto mb-6 relative">
+                <svg class="w-10 h-10 text-blue-500 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-width="2"
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+                <div class="absolute inset-0 border-t-2 border-blue-500 rounded-full animate-[spin_2s_linear_infinite]"></div>
+            </div>
+
+            <h3 class="text-xl font-black text-white mb-2">
+                جاري الاتصال بالسيرفرات
+            </h3>
+
+            <p class="text-sm text-zinc-500 mb-6">
+                نحضر بالجلسة المحمية والشبكة العصبية...
+            </p>
+
+            <div class="w-48 h-1.5 bg-zinc-800 rounded-full mx-auto overflow-hidden loading-bar"></div>
+        </div>
+    </div>
+
+    <!-- VIEW 3: MAIN DASHBOARD -->
+    <div id="view-main" class="hidden flex-1 w-full max-w-xl flex-col items-center pt-6 pb-20 animate-fade-in">
+
+        <!-- Header -->
+        <div class="w-full flex items-center justify-between mb-8 pb-4 border-b border-zinc-800">
+            <div class="flex items-center gap-3">
+                <svg class="w-10 h-10 fill-white drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]"
+                    viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M40 20 L50 35 L40 50 L55 50 L65 30 L55 20 Z" />
+                    <path d="M60 40 L65 50 L55 60 L65 60 L75 45 L65 35 Z" />
+                    <path d="M70 55 L75 65 L65 75 L75 75 L85 60 L75 50 Z" />
+                </svg>
+
+                <div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]"></span>
+                        <span class="text-xs font-black text-green-500 tracking-wider" style="font-family: sans-serif;">
+                            SYSTEM SECURE
+                        </span>
+                    </div>
+
+                    <p class="text-[10px] font-bold text-zinc-500 tracking-widest" style="font-family: sans-serif;">
+                        SESSION: 0x8F2A...B19
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Selection -->
+        <div class="w-full flex items-center justify-between mb-4">
+            <h3 class="text-sm font-bold text-zinc-300">
+                اختار اللعبة اللي تريد تتوقعها:
+            </h3>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3 w-full mb-8">
+
+            <!-- Mines Game -->
+            <button type="button" data-game="MINES"
+                class="game-btn bg-[#0a0a0c] border border-zinc-800 rounded-2xl p-3 flex flex-col items-center justify-center gap-3">
+                <div class="w-16 h-16 rounded-xl overflow-hidden bg-gradient-to-br from-indigo-900 to-black border border-indigo-500/30 flex items-center justify-center game-icon-container relative shadow-inner">
+                    <span class="text-3xl relative z-10 drop-shadow-lg">💣</span>
+                    <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTE5IDBMMTkgMjBMMCAyMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDUpIiBzdHJva2Utd2lkdGg9IjEiLz48L3N2Zz4=')] opacity-50 z-0"></div>
+                </div>
+                <span class="font-black text-xs text-white tracking-wider" style="font-family: sans-serif;">
+                    MINES
+                </span>
+            </button>
+
+            <!-- Aviator Game -->
+            <button type="button" data-game="AVIATOR"
+                class="game-btn bg-[#0a0a0c] border border-zinc-800 rounded-2xl p-3 flex flex-col items-center justify-center gap-3">
+                <div class="w-16 h-16 rounded-xl overflow-hidden bg-gradient-to-br from-red-900/80 to-black border border-red-500/30 flex items-center justify-center game-icon-container relative shadow-inner">
+                    <span class="text-3xl relative z-10 drop-shadow-lg">✈️</span>
+                    <svg class="absolute bottom-0 left-0 w-full h-full opacity-40 z-0"
+                        viewBox="0 0 100 100" preserveAspectRatio="none">
+                        <path d="M0 100 L20 80 L40 85 L100 20 L100 100 Z"
+                            fill="rgba(239, 68, 68, 0.2)"
+                            stroke="rgba(239, 68, 68, 0.5)"
+                            stroke-width="2"/>
+                    </svg>
+                </div>
+                <span class="font-black text-xs text-white tracking-wider" style="font-family: sans-serif;">
+                    AVIATOR
+                </span>
+            </button>
+
+            <!-- Apple of Fortune Game -->
+            <button type="button" data-game="APPLE"
+                class="game-btn bg-[#0a0a0c] border border-zinc-800 rounded-2xl p-3 flex flex-col items-center justify-center gap-3">
+                <div class="w-16 h-16 rounded-xl overflow-hidden bg-gradient-to-br from-green-900 to-black border border-green-500/30 flex items-center justify-center game-icon-container relative shadow-inner">
+                    <span class="text-3xl relative z-10 drop-shadow-lg">🍏</span>
+                    <div class="absolute inset-0 bg-[radial-gradient(circle,rgba(74,222,128,0.1)_0%,rgba(0,0,0,0)_70%)] z-0"></div>
+                </div>
+                <span class="font-black text-[10px] text-center leading-tight text-white tracking-widest"
+                    style="font-family: sans-serif;">
+                    APPLE OF<br>FORTUNE
+                </span>
+            </button>
+
+        </div>
+
+        <!-- Dynamic Output Box for Coefficient Result -->
+        <div id="coefficient-box" class="w-full bg-zinc-900/90 border border-zinc-800 rounded-2xl p-6 mb-6 text-center hidden animate-fade-in">
+            <span class="text-xs text-zinc-500 uppercase tracking-widest font-bold block mb-1">النتيجة المتوقعة</span>
+            <div id="coefficient-value" class="text-5xl font-black text-green-400 tracking-wider my-2 drop-shadow-[0_0_15px_rgba(74,222,128,0.4)]" style="font-family: sans-serif;">
+                x1.00
+            </div>
+            <p id="selected-game-name" class="text-xs text-zinc-400 font-bold uppercase"></p>
+        </div>
+
+        <button type="button" id="btn-get-signal"
+            class="w-full bg-blue-600 hover:bg-blue-500 text-white py-5 rounded-xl font-black text-base tracking-widest transition-all flex items-center justify-center gap-3 opacity-50 cursor-not-allowed border border-blue-400/30"
+            disabled>
+
+            <svg id="icon-spin" class="w-6 h-6 animate-spin hidden" fill="none"
+                stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+
+            <span id="text-btn-signal">
+                ابدأ الربط بالسيرفر
+            </span>
+        </button>
+    </div>
+
+    <!-- LIVE WINS FEED -->
+    <div id="live-feed"
+        class="fixed bottom-4 left-4 right-4 md:left-6 md:right-auto md:w-72 flex flex-col gap-2 z-40 pointer-events-none">
+    </div>
+
+    <script>
+        // Password Protection & Navigation Logic
+        document.getElementById('btn-start').addEventListener('click', () => {
+            const passwordInput = document.getElementById('input-password').value;
+            const errorMsg = document.getElementById('password-error');
+
+            if (passwordInput === '2282') {
+                errorMsg.classList.add('hidden');
+                document.getElementById('view-landing').classList.add('hidden');
+                document.getElementById('view-landing').classList.remove('flex');
+
+                document.getElementById('view-loader').classList.remove('hidden');
+                document.getElementById('view-loader').classList.add('flex');
+
+                setTimeout(() => {
+                    document.getElementById('view-loader').classList.add('hidden');
+                    document.getElementById('view-loader').classList.remove('flex');
+
+                    document.getElementById('view-main').classList.remove('hidden');
+                    document.getElementById('view-main').classList.add('flex');
+                }, 2000);
+            } else {
+                errorMsg.classList.remove('hidden');
+            }
+        });
+
+        // Game Selection Logic
+        document.querySelectorAll('.game-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.game-btn').forEach(b => {
+                    b.classList.remove('active');
+                });
+
+                const currentBtn = e.currentTarget;
+                currentBtn.classList.add('active');
+
+                const btnSignal = document.getElementById('btn-get-signal');
+
+                btnSignal.disabled = false;
+                btnSignal.classList.remove(
+                    'opacity-50',
+                    'cursor-not-allowed',
+                    'bg-blue-600',
+                    'hover:bg-blue-500'
+                );
+
+                btnSignal.classList.add(
+                    'bg-green-600',
+                    'hover:bg-green-500',
+                    'border-green-400/50',
+                    'shadow-[0_0_20px_rgba(22,163,74,0.4)]'
+                );
+
+                document.getElementById('text-btn-signal').textContent =
+                    `توقع ${currentBtn.dataset.game}`;
+            });
+        });
+
+        // Get Signal Button -> Generates Random Coefficient up to 5x
+        document.getElementById('btn-get-signal').addEventListener('click', () => {
+            const btnSignal = document.getElementById('btn-get-signal');
+            const textBtn = document.getElementById('text-btn-signal');
+            const iconSpin = document.getElementById('icon-spin');
+            const coeffBox = document.getElementById('coefficient-box');
+            const coeffValue = document.getElementById('coefficient-value');
+            const gameName = document.getElementById('selected-game-name');
+
+            const activeGameBtn = document.querySelector('.game-btn.active');
+            const selectedGame = activeGameBtn ? activeGameBtn.dataset.game : 'GAME';
+
+            btnSignal.disabled = true;
+            textBtn.textContent = 'جاري حساب التوقع...';
+            iconSpin.classList.remove('hidden');
+            coeffBox.classList.add('hidden');
+
+            setTimeout(() => {
+                btnSignal.disabled = false;
+                textBtn.textContent = 'توقع مرة اخرى';
+                iconSpin.classList.add('hidden');
+
+                // Generate random multiplier from 1.05 to 5.00
+                const randomCoeff = (Math.random() * (5.00 - 1.05) + 1.05).toFixed(2);
+
+                coeffValue.textContent = `x${randomCoeff}`;
+                gameName.textContent = selectedGame;
+                coeffBox.classList.remove('hidden');
+            }, 1500);
+        });
+
+        // LIVE WINS GENERATOR
+        const fakeGames = [
+            {name: 'MINES', icon: '💣'},
+            {name: 'AVIATOR', icon: '✈️'},
+            {name: 'APPLE', icon: '🍏'}
+        ];
+
+        function generateRandomId() {
+            return `17*******`;
+        }
+
+        function showLiveWin() {
+            const game = fakeGames[Math.floor(Math.random() * fakeGames.length)];
+
+            // Random amount in Iraqi Dinars (IQD)
+            const iqdAmount = Math.floor(Math.random() * 250000) + 15000;
+            const formattedAmount = '+' + iqdAmount.toLocaleString('ar-IQ') + ' د.ع';
+
+            const feedContainer = document.getElementById('live-feed');
+
+            const winItem = document.createElement('div');
+
+            winItem.className =
+                'bg-zinc-900/95 backdrop-blur-md border border-zinc-800/80 rounded-xl p-3 shadow-[0_5px_20px_rgba(0,0,0,0.6)] flex items-center gap-3 animate-slide-up transition-all';
+
+            winItem.innerHTML = `
+                <div class="w-10 h-10 bg-gradient-to-br from-zinc-800 to-black rounded-lg flex items-center justify-center text-xl shadow-inner border border-zinc-700/50">
+                    ${game.icon}
+                </div>
+
+                <div class="flex-1 flex justify-between items-center">
+                    <div>
+                        <p class="text-[12px] font-bold text-white tracking-widest font-sans" dir="ltr">
+                            ID: ${generateRandomId()}
+                        </p>
+
+                        <p class="text-[10px] text-zinc-400 font-sans">
+                            ${game.name}
+                        </p>
+                    </div>
+
+                    <div class="text-left">
+                        <p class="text-sm font-black text-green-400 font-sans" dir="ltr">
+                            ${formattedAmount}
+                        </p>
+                    </div>
+                </div>
+            `;
+
+            feedContainer.prepend(winItem);
+
+            if (feedContainer.children.length > 3) {
+                const oldestItem = feedContainer.lastElementChild;
+
+                oldestItem.classList.remove('animate-slide-up');
+                oldestItem.classList.add('animate-fade-out');
+
+                setTimeout(() => {
+                    if (oldestItem.parentNode) {
+                        oldestItem.remove();
+                    }
+                }, 400);
+            }
+        }
+
+        setTimeout(function winLoop() {
+            showLiveWin();
+
+            const nextDelay =
+                Math.floor(Math.random() * 4000) + 2000;
+
+            setTimeout(winLoop, nextDelay);
+        }, 1000);
+    </script>
+
+</body>
+</html>
